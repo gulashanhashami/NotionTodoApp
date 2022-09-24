@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navBar">
+      <p style="margin-left: 2%;">TODO APP</p>
+    </div>
+    <div style="margin-top: 30px">
+      <input class="inputText" id="inputbox" type="text" placeholder="Enter text" />
+      <button class="buttonBox" onclick="getDataFromInput()">Submit</button>
+    </div>
+    <!-- headline for task box -->
+    <div style="padding: 1%; margin-left: 4%;">
+      <h2>Created Tasks</h2>
+
+    </div>
+    <!-- code for task box -->
+    <div id="contain" class="containt"></div>
+
+    <div style="padding: 1%; margin-left: 4%;">
+      <!-- headline for done box -->
+      <h2>Done tasks</h2>
+
+    </div>
+    <!-- code for doneBox -->
+    <div id="contain1" class="containt"></div>
+  </body>
+</html>
+<script>
+  //  function for storing entered task in an array
+  var arr1 = [];
+  function getDataFromInput() {
+    var inputData = document.getElementById("inputbox").value;
+  if(inputData.length===0){
+    alert("Please enter a task name");
+    return;
+  }
+    var datalist = {
+      itemD: inputData,
+    };
+    arr1.push(datalist);
+    console.log(arr1);
+    document.getElementById("inputbox").value = "";
+    
+    display(arr1);
+  }
+
+  var containt = document.getElementById("contain");
+
+  //  function for displaying, the task in task box
+  function display(arr1) {
+    containt.innerHTML = "";
+    //code for map the data
+    arr1.map(function (data, i) {
+      var div1 = document.createElement("div");
+      div1.setAttribute("class", "dataDiv");
+      var p1 = document.createElement("p");
+      p1.textContent = data.itemD;
+      var x = document.createElement("INPUT");
+      x.setAttribute("type", "checkbox");
+      x.addEventListener("change", function () {
+        donefunction(arr1, data, i, x);
+      });
+      var pText = document.createElement("p");
+      pText.textContent = "Mark as completed";
+      var markAsCompleteBox=document.createElement("div");
+      markAsCompleteBox.setAttribute("class", "markingBox");
+      markAsCompleteBox.append(x, pText);
+      div1.append(p1, markAsCompleteBox);
+      containt.append(div1);
+    });
+  }
+
+
+  //after checked (done), storing done task in an array
+
+  var arr2 = [];
+  function donefunction(arr1, doneText, i, x) {
+    var confirm = window.confirm("Are you sure, you have done the task?");
+    // console.log(confirm)
+    if (confirm) {
+      arr2.push(doneText);
+      var delData = arr1.splice(i, 1); // after done delete done task from previous
+      display(arr1);
+    } else {
+      x.checked = false;
+    }
+
+    console.log("dotext", arr2);
+    displayDoneData(arr2, x, doneText);
+  }
+
+  var containt1 = document.getElementById("contain1");
+  //  function for displaying the done task
+  function displayDoneData(arr2, x, doneText) {
+    console.log("arr2", arr2);
+    // console.log(arr1)
+    containt1.innerHTML = "";
+    arr2.map(function (dat, i) {
+      var div2 = document.createElement("div");
+      div2.setAttribute("class", "dataDivDone");
+      var p2 = document.createElement("p");
+      p2.textContent = dat.itemD;
+      var p3 = document.createElement("p");
+      p3.textContent = "Mark as incomplete";
+      var buttonDiv = document.createElement("div");
+      buttonDiv.innerHTML = ` <button>Delete</button>`;
+      buttonDiv.addEventListener("click", function () {
+        deleteDataFunction(arr2, i, x, doneText);
+      });
+      var markAsIncompleteBox=document.createElement("div");
+      markAsIncompleteBox.setAttribute("class", "markingBox");
+      var doneTextAndButtonBox=document.createElement("div");
+      doneTextAndButtonBox.setAttribute("class", "TextAndButtonBox");
+
+      var markAsIncomplete = document.createElement("INPUT");
+      markAsIncomplete.setAttribute("type", "checkbox");
+      markAsIncomplete.addEventListener("change", function () {
+        markAsIncompleteFunction(arr2, dat, i);
+      });
+      doneTextAndButtonBox.append(p2, buttonDiv)
+      markAsIncompleteBox.append(markAsIncomplete, p3);
+      div2.append(doneTextAndButtonBox,  markAsIncompleteBox);
+      containt1.append(div2);
+    });
+  }
+
+  // function for deleting the done task from done task box
+  function deleteDataFunction(dataArr, i, x, doneText) {
+    var confirm = window.confirm("Are you sure, you want to delete it?");
+    if (confirm) {
+      var delData = dataArr.splice(i, 1);
+      displayDoneData(dataArr);
+    }
+  }
+//function to handle mark as incomplete in done task box
+  function markAsIncompleteFunction(dataArr, dat, i){
+    // console.log("data",dat)
+    dataArr.splice(i,1);
+    displayDoneData(dataArr);
+    arr1.push(dat);
+    display(arr1);
+
+  }
+</script>
