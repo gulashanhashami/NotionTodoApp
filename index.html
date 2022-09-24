@@ -35,6 +35,13 @@
 <script>
   //  function for storing entered task in an array
   var arr1 = [];
+  var containt = document.getElementById("contain");
+
+  if(arr1.length===0){
+    var showEmptyAlert=document.createElement("h1")
+    showEmptyAlert.textContent="There is no task";
+    containt.append(showEmptyAlert)
+  }
   function getDataFromInput() {
     var inputData = document.getElementById("inputbox").value;
   if(inputData.length===0){
@@ -51,8 +58,7 @@
     display(arr1);
   }
 
-  var containt = document.getElementById("contain");
-
+  
   //  function for displaying, the task in task box
   function display(arr1) {
     containt.innerHTML = "";
